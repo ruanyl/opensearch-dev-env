@@ -45,7 +45,7 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
       - name: Update manifest
         run: |
-          artifacts=$(echo ${{ steps.release.outputs.assets }})
+          artifacts=$(echo ${{ steps.release.outputs.assets }} | yq e -o=j -I=0 '.[]' -)
           for line in $artifacts; do
             filename=$(echo "$line" | yq e '.name' -)
             # filename without extension which should be the plugin name
