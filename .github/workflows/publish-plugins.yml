@@ -73,8 +73,8 @@ jobs:
           commit-message: update artifacts.json [skip ci]
           title: Update artifacts.json
           branch: create-pull-request/update-artifacts-json
-          base: main
           signoff: true
+          delete-branch: true
           add-paths: |
             charts/opensearch-dashboards/plugins/artifacts.json
             charts/opensearch/plugins/artifacts.json
