@@ -20,17 +20,21 @@ jobs:
           /usr/local/bin/yq --version
       - name: Publish untracked plugins
         run: |
-          plugins=$(yq e -o=j -I=0 '.plugins[]' ./charts/opensearch-dashboards/plugins/manifest.yaml)
           mkdir .downloads
-          curl --version
-          for line in $plugins; do
-            name=$(echo "$line" | yq e '.name' -)
-            url=$(echo "$line" | yq e '.url' -)
-            echo "Name: $name"
-            echo "URL: $url"
-            if [[ $url != "${{ github.server_url }}/${{ github.repository }}"* ]]; then
-              curl -o ./.downloads/$name.zip -L $url
-            fi
+
+          paths=(./charts/opensearch-dashboards/plugins/artifacts.json ./charts/opensearch/plugins/artifacts.json)
+          for path in "${paths[@]}"; do
+            plugins=$(yq e -o=j -I=0 '.plugins[]' $path)
+            curl --version
+            for line in $plugins; do
+              name=$(echo "$line" | yq e '.name' -)
+              url=$(echo "$line" | yq e '.url' -)
+              echo "Name: $name"
+              echo "URL: $url"
+              if [[ $url != "${{ github.server_url }}/${{ github.repository }}"* ]]; then
+                curl -o ./.downloads/$name.zip -L $url
+              fi
+            done
           done
       - name: Create Release Tag
         run: |
@@ -52,9 +56,12 @@ jobs:
             echo "filename: $filename"
             # filename without extension which should be the plugin name
             name="${filename%.*}"
-            echo "Name: $name"
             url=$(echo "$line" | yq e '.browser_download_url' -)
-            echo "URL: $url"
-            name="$name" url="$url" yq -i '.plugins |= map(select(.name == strenv(name)).url=strenv(url))' ./charts/opensearch-dashboards/plugins/manifest.yaml
+            echo "Name: $name, URL: $url"
+
+            paths=(./charts/opensearch-dashboards/plugins/artifacts.json ./charts/opensearch/plugins/artifacts.json)
+            for path in "${paths[@]}"; do
+              name="$name" url="$url" yq -i '.plugins |= map(select(.name == strenv(name)).url=strenv(url))' $path
+            done
           done
-          cat ./charts/opensearch-dashboards/plugins/manifest.yaml
+          cat ./charts/opensearch-dashboards/plugins/artifacts.json
