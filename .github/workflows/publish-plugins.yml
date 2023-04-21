@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: opensearch-dev-env
       - name: Install Dependencies
         run: |
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
@@ -20,11 +18,24 @@ jobs:
           /usr/local/bin/yq --version
       - name: Publish untracked plugins
         run: |
-          cd opensearch-dev-env
           plugins=$(yq e -o=j -I=0 '.plugins[]' ./charts/opensearch-dashboards/plugins/manifest.yaml)
+          mkdir .downloads
+          curl --version
           for line in $plugins; do
             name=$(echo "$line" | yq e '.name' -)
             url=$(echo "$line" | yq e '.url' -)
             echo "Name: $name"
             echo "URL: $url"
+            if [[ $url != "${{ github.server_url }}/${{ github.repository }}"* ]]; then
+              curl -o ./.downloads/$name.zip -L $url
+            fi
           done
+      - name: Release
+        id: release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: ./.downloads/*
+      - name: Update manifest
+        run: |
+         echo ${{ steps.release.outputs.assets }}
