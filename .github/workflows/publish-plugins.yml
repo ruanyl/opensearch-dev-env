@@ -45,7 +45,7 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
       - name: Update manifest
         run: |
-          artifacts=$(echo "${{ steps.release.outputs.assets }}" | yq e -o=j -I=0 '.[]' -)
+          artifacts=$(echo '${{ steps.release.outputs.assets }}' | yq e -o=j -I=0 '.[]' -)
           for line in $artifacts; do
             echo "LINE: $line"
             filename=$(echo "$line" | yq e '.name' -)
