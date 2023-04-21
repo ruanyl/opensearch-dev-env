@@ -45,4 +45,14 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
       - name: Update manifest
         run: |
-         echo ${{ steps.release.outputs.assets }}
+          artifacts=$(echo ${{ steps.release.outputs.assets }})
+          for line in $artifacts; do
+            filename=$(echo "$line" | yq e '.name' -)
+            # filename without extension which should be the plugin name
+            name="${filename%.*}"
+            echo "Name: $name"
+            url=$(echo "$line" | yq e '.browser_download_url' -)
+            echo $url
+            name="$name" url="$url" yq -i '.plugins |= map(select(.name == strenv(name)).url=strenv(url))' ./charts/opensearch-dashboards/plugins/manifest.yaml
+          done
+          cat ./charts/opensearch-dashboards/plugins/manifest.yaml
