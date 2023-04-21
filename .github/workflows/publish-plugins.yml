@@ -47,12 +47,14 @@ jobs:
         run: |
           artifacts=$(echo "${{ steps.release.outputs.assets }}" | yq e -o=j -I=0 '.[]' -)
           for line in $artifacts; do
+            echo "LINE: $line"
             filename=$(echo "$line" | yq e '.name' -)
+            echo "filename: $filename"
             # filename without extension which should be the plugin name
             name="${filename%.*}"
             echo "Name: $name"
             url=$(echo "$line" | yq e '.browser_download_url' -)
-            echo $url
+            echo "URL: $url"
             name="$name" url="$url" yq -i '.plugins |= map(select(.name == strenv(name)).url=strenv(url))' ./charts/opensearch-dashboards/plugins/manifest.yaml
           done
           cat ./charts/opensearch-dashboards/plugins/manifest.yaml
