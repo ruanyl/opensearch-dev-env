@@ -9,6 +9,8 @@ on:
 jobs:
   publish-plugins:
     runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: artifacts.${{ github.run_id }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Dependencies
@@ -30,12 +32,17 @@ jobs:
               curl -o ./.downloads/$name.zip -L $url
             fi
           done
+      - name: Create Release Tag
+        run: |
+          git tag ${{ env.RELEASE_TAG }}
+          git push origin ${{ env.RELEASE_TAG }}
       - name: Release
         id: release
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
           files: ./.downloads/*
+          tag_name: ${{ env.RELEASE_TAG }}
       - name: Update manifest
         run: |
          echo ${{ steps.release.outputs.assets }}
