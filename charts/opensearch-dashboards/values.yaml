@@ -166,7 +166,7 @@ service:
   httpPortName: http
 
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName: alb
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
