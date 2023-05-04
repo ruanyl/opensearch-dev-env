@@ -9,8 +9,8 @@ ci:
     args: -e JAVA_HOME=/opt/java/openjdk-17
 components:
   - name: OpenSearch
-    repository: https://github.com/opensearch-project/OpenSearch.git
-    ref: tags/2.7.0
+    repository: https://github.com/msfroh/OpenSearch.git
+    ref: 2.7_search_pipelines
     checks:
       - gradle:publish
       - gradle:properties:version
