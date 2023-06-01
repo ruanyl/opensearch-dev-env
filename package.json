@@ -1,0 +1,25 @@
+{
+  "name": "opensearch-dev-env",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "GitOps environment repo for OpenSearch and OpenSearch-Dashboards development",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruanyl/opensearch-dev-env.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ruanyl/opensearch-dev-env/issues"
+  },
+  "homepage": "https://github.com/ruanyl/opensearch-dev-env#readme",
+  "dependencies": {
+    "async": "^3.2.4",
+    "commander": "^10.0.1",
+    "node-fetch": "^3.3.1"
+  }
+}
