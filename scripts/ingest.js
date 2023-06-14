@@ -5,6 +5,8 @@ import { program } from "commander";
 import fs from "node:fs";
 import readline from "node:readline";
 import fetch from "node-fetch";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { nanoid } from "nanoid";
 
 program
   .requiredOption(
@@ -23,41 +25,44 @@ program
     "text"
   )
   .option(
-    "--text-limit <textLimit>",
-    "The text size limit, if exceed limit, text will be split into multiple document. Text won't be split by default"
+    "--chunk-size <chunkSize>",
+    "The text chunk size limit, if exceed limit, text will be split into multiple document.",
+    Number,
+    1000
   )
+  .option("--chunk-overlap <chunkOverlap>", "Text chunk overlap", Number, 200)
   .option("-p, --password <password>", "OpenSearch password")
   .option(
     "-b, --batch-size <batchSize>",
-    "The number of documents to be sent to ingest at a given time",
+    "The number of documents to be sent to ingest in one request",
+    Number,
+    1
+  )
+  .option(
+    "--concurrency <concurrency>",
+    "The number of requests to run in parallel",
+    Number,
     1
   );
 
 program.parse();
 const opts = program.opts();
-const failedTasks = [];
 
-function split(text, limit) {
-  if (text.length <= limit) {
-    return [text];
-  }
-  let remainingText = text;
-  const result = [];
+let count = 0;
+const batch = [];
 
-  while (remainingText.length > limit) {
-    let splitPoint = limit;
-    while (remainingText.charAt(splitPoint) !== " " && splitPoint >= 0) {
-      splitPoint = splitPoint - 1;
-    }
-    result.push(remainingText.substring(0, splitPoint));
-    remainingText = remainingText.substring(splitPoint);
+function addToBatch(data) {
+  if (batch.length >= opts.batchSize) {
+    flush();
   }
-  result.push(remainingText);
-  return result;
+
+  batch.push(data);
 }
 
 const q = queue((task, callback) => {
-  const endpoint = new URL(`${opts.indexName}/_doc`, opts.cluster);
+  let endpoint = task.bulk
+    ? new URL(`${opts.indexName}/_bulk`, opts.cluster)
+    : new URL(`${opts.indexName}/_doc/${task.documentId}`, opts.cluster);
   let headers = {
     "Content-Type": "application/json",
   };
@@ -77,26 +82,105 @@ const q = queue((task, callback) => {
     headers,
   })
     .then((res) => {
-      res.json().then((d) => {
-        console.log(d);
-        if (d.error) {
-          failedTasks.push(task);
+      res.json().then((json) => {
+        if (json.error) {
+          console.log("Error: ", JSON.stringify(json.error));
+          // retry task
+          q.push(task);
+        } else if (json.errors) {
+          const failed = [];
+          const succeed = [];
+          // when ingesting with _bulk, we will need to find out the failed documents and recreate the documents
+          json.items.forEach((e) => {
+            if (e.index.error) {
+              failed.push(e.index._id);
+              addToBatch(task.rawData[e.index._id]);
+              console.log("Error: ", JSON.stringify(e.index.error));
+            } else {
+              succeed.push(e.index._id);
+            }
+          });
+          count = count + succeed.length;
+          console.log(
+            `Trying to create ${
+              Object.keys(task.rawData).length
+            } documents: Failed ${failed.length}/Succeed ${
+              succeed.length
+            } (Retrying ${failed})`
+          );
+        } else {
+          count++;
         }
         callback();
       });
     })
+    .then(() => {
+      console.log(`${count} documents created`);
+    })
     .catch((e) => {
       console.log(e);
-      failedTasks.push(task);
+      // retry
+      q.push(task);
       callback();
     });
-}, opts.batchSize);
+}, opts.concurrency);
 
-const run = (options) => {
+function flush() {
+  let payload = "";
+  const rawData = {};
+  batch.forEach((data) => {
+    rawData[data.id] = data;
+    payload = payload + JSON.stringify({ index: { _id: data.id } }) + "\n";
+    payload = payload + JSON.stringify(data) + "\n";
+  });
+  if (payload) {
+    q.push({ data: payload, bulk: true, rawData });
+    batch.length = 0;
+  }
+}
+
+function write(json) {
+  const id = json.id;
   const textField = opts.textField;
-  const textLimit = opts.textLimit;
+  const chunkSize = opts.chunkSize ? parseInt(opts.chunkSize) : 1000;
+  const chunkOverlap = opts.chunkOverlap ? parseInt(opts.chunkOverlap) : 200;
+  const splitter = new RecursiveCharacterTextSplitter({
+    chunkSize: chunkSize,
+    chunkOverlap: chunkOverlap,
+  });
+  const text = json[textField];
 
-  const filepath = options.file;
+  if (text) {
+    splitter.createDocuments([text]).then((docs) => {
+      docs.forEach((d, i) => {
+        const data = { ...json, text: d.pageContent };
+        if (id === undefined || id === null || id === "") {
+          data.id = nanoid();
+        }
+
+        if (docs.length > 1) {
+          data.id = `${id}_${i}`;
+        } else {
+          data.id = id;
+        }
+
+        // request _bulk if batchSize > 1
+        if (opts.batchSize > 1) {
+          addToBatch(data);
+        } else {
+          q.push({
+            data: JSON.stringify(data),
+            bulk: false,
+            documentId: data.id,
+          });
+        }
+      });
+    });
+  }
+}
+
+const run = () => {
+  const filepath = opts.file;
   const rl = readline.createInterface({
     input: fs.createReadStream(filepath),
     crlfDelay: Infinity,
@@ -104,28 +188,17 @@ const run = (options) => {
 
   rl.on("line", (line) => {
     const json = JSON.parse(line);
-    const text = json[textField];
-    // if text limit is set, split the text into multiple documents
-    if (text && textLimit) {
-      split(json.text, parseInt(textLimit)).map((text, i) => {
-        const data = { ...json, text };
-        if ("id" in data) {
-          data.id = `${data.id}_${i}`;
-        }
-        q.push({ data: JSON.stringify(data) });
-      });
-    } else {
-      q.push({ data: line });
-    }
+    write(json);
+  });
+
+  rl.on("close", () => {
+    setTimeout(flush, 1000);
   });
 };
 
-run(opts);
+console.log("Run with: ", opts);
+run();
 
 q.drain(() => {
   console.log("Done - all documents have been processed!");
-  if (failedTasks.length > 0) {
-    console.log(`${failedTasks.length} tasks failed!`);
-    console.log("Failed tasks: ", failedTasks);
-  }
 });
