@@ -197,18 +197,23 @@ function write(json) {
 }
 
 const run = () => {
+  let lineCount = 0;
   rl.on("line", (line) => {
+    console.log("Reading line: ", lineCount++);
     const json = JSON.parse(line);
     write(json);
 
     if (q.length() > 10) {
       rl.pause();
-      console.log(`PAUSE reading file, task queue size: ${q.length()}`);
     }
   });
 
   rl.on("close", () => {
     setTimeout(flush, 1000);
+  });
+
+  rl.on("pause", () => {
+    console.log(`PAUSE reading file, task queue size: ${q.length()}`);
   });
 };
 
