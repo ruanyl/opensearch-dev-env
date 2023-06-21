@@ -4,6 +4,7 @@ import { queue } from "async";
 import { program } from "commander";
 import fs from "node:fs";
 import readline from "node:readline";
+// import https from 'node:https';
 import fetch from "node-fetch";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { nanoid } from "nanoid";
@@ -24,6 +25,7 @@ program
     "The text field of the ingested data",
     "text"
   )
+  .option("--only-text <onlyText>", "only keep text field", false)
   .option(
     "--chunk-size <chunkSize>",
     "The text chunk size limit, if exceed limit, text will be split into multiple document.",
@@ -79,6 +81,7 @@ const q = queue((task, callback) => {
   fetch(endpoint, {
     method: "POST",
     body: task.data,
+    // agent: new https.Agent({rejectUnauthorized: false}),
     headers,
   })
     .then((res) => {
@@ -109,13 +112,18 @@ const q = queue((task, callback) => {
             } (Retrying ${failed})`
           );
         } else {
-          count++;
+          count = count + json.items.length;
         }
         callback();
       });
     })
     .then(() => {
       console.log(`${count} documents created`);
+      // RESUME reading file
+      if (q.length() < 3) {
+        rl.resume();
+        console.log("RESUME reading file");
+      }
     })
     .catch((e) => {
       console.log(e);
@@ -139,8 +147,19 @@ function flush() {
   }
 }
 
+// Read json data file
+const filepath = opts.file;
+const rl = readline.createInterface({
+  input: fs.createReadStream(filepath),
+  crlfDelay: Infinity,
+});
+
 function write(json) {
   const id = json.id;
+  if (id === undefined || id === null || id === "") {
+    json.id = nanoid();
+  }
+
   const textField = opts.textField;
   const chunkSize = opts.chunkSize ? parseInt(opts.chunkSize) : 1000;
   const chunkOverlap = opts.chunkOverlap ? parseInt(opts.chunkOverlap) : 200;
@@ -148,20 +167,17 @@ function write(json) {
     chunkSize: chunkSize,
     chunkOverlap: chunkOverlap,
   });
-  const text = json[textField];
+  const text = json[textField]?.toString();
 
   if (text) {
     splitter.createDocuments([text]).then((docs) => {
       docs.forEach((d, i) => {
-        const data = { ...json, text: d.pageContent };
-        if (id === undefined || id === null || id === "") {
-          data.id = nanoid();
+        let data = { ...json, text: d.pageContent };
+        if (opts.onlyText) {
+          data = { text: d.pageContent, id: json.id };
         }
-
         if (docs.length > 1) {
-          data.id = `${id}_${i}`;
-        } else {
-          data.id = id;
+          data.id = `${data.id}_${i}`;
         }
 
         // request _bulk if batchSize > 1
@@ -177,18 +193,18 @@ function write(json) {
       });
     });
   }
+  // TODO: future improvement: supports ingesting raw documents without splitting
 }
 
 const run = () => {
-  const filepath = opts.file;
-  const rl = readline.createInterface({
-    input: fs.createReadStream(filepath),
-    crlfDelay: Infinity,
-  });
-
   rl.on("line", (line) => {
     const json = JSON.parse(line);
     write(json);
+
+    if (q.length() > 10) {
+      rl.pause();
+      console.log(`PAUSE reading file, task queue size: ${q.length()}`);
+    }
   });
 
   rl.on("close", () => {
