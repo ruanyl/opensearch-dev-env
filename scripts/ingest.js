@@ -25,7 +25,7 @@ program
     "The text field of the ingested data",
     "text"
   )
-  .option("--only-text <onlyText>", "only keep text field", false)
+  .option("--only-text", "only keep text field")
   .option(
     "--chunk-size <chunkSize>",
     "The text chunk size limit, if exceed limit, text will be split into multiple document.",
