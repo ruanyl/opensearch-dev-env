@@ -4,7 +4,7 @@ import { queue } from "async";
 import { program } from "commander";
 import fs from "node:fs";
 import readline from "node:readline";
-// import https from 'node:https';
+import https from "node:https";
 import fetch from "node-fetch";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { nanoid } from "nanoid";
@@ -81,7 +81,7 @@ const q = queue((task, callback) => {
   fetch(endpoint, {
     method: "POST",
     body: task.data,
-    // agent: new https.Agent({rejectUnauthorized: false}),
+    agent: new https.Agent({ rejectUnauthorized: false }),
     headers,
   })
     .then((res) => {
@@ -170,28 +170,29 @@ function write(json) {
   const text = json[textField]?.toString();
 
   if (text) {
-    splitter.createDocuments([text]).then((docs) => {
-      docs.forEach((d, i) => {
-        let data = { ...json, text: d.pageContent };
-        if (opts.onlyText) {
-          data = { text: d.pageContent, id: json.id };
-        }
-        if (docs.length > 1) {
-          data.id = `${data.id}_${i}`;
-        }
+    delete json[textField];
+    // splitter.createDocuments([text]).then((docs) => {
+    // docs.forEach((d, i) => {
+    let data = { ...json, text: text };
+    if (opts.onlyText) {
+      data = { text: text, id: json.id };
+    }
+    // if (docs.length > 1) {
+    //   data.id = `${data.id}_${i}`;
+    // }
 
-        // request _bulk if batchSize > 1
-        if (opts.batchSize > 1) {
-          addToBatch(data);
-        } else {
-          q.push({
-            data: JSON.stringify(data),
-            bulk: false,
-            documentId: data.id,
-          });
-        }
+    // request _bulk if batchSize > 1
+    if (opts.batchSize > 1) {
+      addToBatch(data);
+    } else {
+      q.push({
+        data: JSON.stringify(data),
+        bulk: false,
+        documentId: data.id,
       });
-    });
+    }
+    //});
+    // });
   }
   // TODO: future improvement: supports ingesting raw documents without splitting
 }
