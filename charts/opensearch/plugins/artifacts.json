@@ -2,7 +2,7 @@
   "plugins": [
     {
       "name": "opensearch-ml",
-      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/artifacts-5404919454/opensearch-ml.zip"
+      "url": "https://ml-commons.s3.us-west-2.amazonaws.com/treadstone/opensearch-ml-2.7.0.0-SNAPSHOT-tune-prompt-claude2.zip?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBUaCXVzLXdlc3QtMiJHMEUCIQCaJb1169o5rk3IiaOJe%2BxlxbEB3cSKmMc%2F5FaoxdzZaAIgAg3AaOD0lTxQIf%2B8rZmaGDzLLZ4%2F3dYEFlrsNHbfsXYq4gIIfhAEGgw4MDEyMjM2MzUxMTkiDIxJ7fI66FwLEeEcjyq%2FAlQKP6nZS6QWNYAQyaPgOQvHvhEVGuLZ0aXQsEAQyUBlCxQK%2B2ddPEOynIOrCLOydgDp6vW%2BEJn2L1j4rS9sf%2BiDjb3QRgNP1SfbWt2GKd9dIcvIolpKqd4BmgDtyAGVPLgsJhXjgGg4Q2D4LTci8aG1juW%2FtxQSZlXyx0CnaRhDdEXY4DrcxTrt0kl3Z%2FCXCA9axLuWz4Da5JmtzSKFco7BBu833a6mn%2BXN5fR7nZO%2Fu2k%2BS5dyiLm6YrLLrQwl%2BsWjB3S2Nn0pyfEwNFqcCk2BuzujB%2FsT%2Fh9Rv8vSXEz8qNSBmf%2BYBPpiLND64r8j52c4vZes02U9P%2BXm2ezQEtaq%2FG%2FjbHGl3GCJ40%2Fc9uXt5a1mNvUpz9olTilyJhVZj02Mpl%2BEdQk1uAfdOSoiNptwbOX41sBGimx4lz2qiz4wv7vypAY6hwKXbkbE2Fd0rofXFtu8cgN1WpvKx7LblYhoKzvlMwoiKhYr3RYx5sNdosv50KbdvPkE0HMVorjnKtHu6V3zc8OhewXxDZWWe6hnyso5r69j%2BhaqFHT%2FyHrAHPOvwspR%2Ft8XLonHHDMxcaarvh2MQXel38GpLU7baoESpbn5N3iENMgP6XhWTqQzHVuL5YnLk977OD1g2HPWrgtubB5z6EsLnQ55WN%2BP7oth84jq947alLV8m348NuSlriEWFy%2FmcnYNpd9wiG6I14EmQ026lTPVg9V1YjBqDH4Z8j1YBsJgZt39yYXCNqSwK3S%2FPABnlWdo0rhnQCwWxV9D4%2BWOuGPaJ2JR%2Fw8eZA%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230628T205357Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=ASIA3VDFGOCX4MIWSL2I%2F20230628%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Signature=b824613bcca2c732074a49b14d22bd0f0b56f16fde614b840b7cf2d7882e10dd"
     },
     {
       "name": "opensearch-neural-search",
