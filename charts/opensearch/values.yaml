@@ -516,19 +516,19 @@ securityConfig:
         ## Demo users
 
         admin:
-          hash: "$2y$12$tTfM0RjXNio.GUrkv/PTJevNDMD1zXcjqhoxqDxNLZv3XvEZH5nG6"
+          hash: "$2y$12$H27dtFOJFClT41I903gJYOynu9tP4.dPQIg7pQfSibWKfwwQYGUkm"
           reserved: true
           backend_roles:
           - "admin"
           description: "Demo admin user"
 
         kibanaserver:
-          hash: "$2y$12$JFeBoHJVTiObDW6i6yMBrewk3tyl/xDPjjGCelKo.qnYAF0J.0EJS"
+          hash: "$2y$12$JHzhExQC8r7L9rs2ooMC7OieRF6K4xVblLHZgVLtTGt3j4swiLIxS"
           reserved: true
           description: "Demo OpenSearch Dashboards user"
 
         kibanaro:
-          hash: "$2y$12$9efQihYw1D.pMwMjDDI8v.ko1HewZIc7zdVgN.I5AcqohCOqs1B8m"
+          hash: "$2y$12$38EfI1uJ5Tfh7rbRO6RctezBOqX7UlQvwKQUYNxcD0/MT9lBuH.Ue"
           reserved: false
           backend_roles:
           - "kibanauser"
@@ -540,21 +540,21 @@ securityConfig:
           description: "Demo OpenSearch Dashboards read only user"
 
         logstash:
-          hash: "$2y$12$bsxVWiXOb4fRvIV4zHKzaenzpjYivwpMpku1Ryko0qwW579uPbXlW"
+          hash: "$2y$12$mbzAwifVuC8NXHpRdkxaiOA/NCTkLidY3Kf4TGWNj.yDDURU5OfQm"
           reserved: false
           backend_roles:
           - "logstash"
           description: "Demo logstash user"
 
         readall:
-          hash: "$2y$12$mhdlCFSUbWy6pNSm5d0w1exLMgeP2yIkTcoKwxfLntCClc8ZcwYy2"
+          hash: "$2y$12$CcbcTAD59.Cw0k8cFFyIzO9qyzaxCV7PN6yFkj2VLNwybDAVIQmhG"
           reserved: false
           backend_roles:
           - "readall"
           description: "Demo readall user"
 
         snapshotrestore:
-          hash: "$2y$12$OIvfIgLmMxMWaweMdgQ5ZO7GQIXDtJvpJD7KhksHQHFe/7AN8CLRq"
+          hash: "$2y$12$pxLNGldBq0qNacj7Mh5YB.S81ye/x6ZQGUSsmJoCWr711/5r6pi7O"
           reserved: false
           backend_roles:
           - "snapshotrestore"

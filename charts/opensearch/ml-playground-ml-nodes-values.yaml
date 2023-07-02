@@ -20,5 +20,16 @@ opensearchJavaOpts: "-Xmx16G -Xms16G"
 
 resources:
   requests:
-    cpu: "4"
-    memory: "32Gi"
+    cpu: "2"
+    memory: "12Gi"
+  limits:
+    nvidia.com/gpu: 1
+
+tolerations:
+  - key: "GPU"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+nodeSelector:
+  GPU: true
