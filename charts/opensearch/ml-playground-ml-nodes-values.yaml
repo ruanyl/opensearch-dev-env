@@ -32,4 +32,4 @@ tolerations:
     effect: "NoSchedule"
 
 nodeSelector:
-  GPU: true
+  GPU: "true"
