@@ -20,8 +20,8 @@ opensearchJavaOpts: "-Xmx16G -Xms16G"
 
 resources:
   requests:
-    cpu: "2"
-    memory: "12Gi"
+    cpu: "4"
+    memory: "16Gi"
   limits:
     nvidia.com/gpu: 1
 
