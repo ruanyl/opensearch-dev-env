@@ -11,38 +11,36 @@ updateStrategy:
     maxUnavailable: 0
 
 # TODO: bind to the actual host
+#ingress:
+#  enabled: true
+#  ingressClassName: alb
+#  annotations:
+#    alb.ingress.kubernetes.io/scheme: internet-facing
+#      # WARNING: HTTPS should be enabled for production deployment
+#    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+#    alb.ingress.kubernetes.io/target-type: ip
+#  labels: {}
+#  hosts:
+#    - paths:
+#        - path: /
+#          backend: {}
+
 ingress:
   enabled: true
   ingressClassName: alb
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
-      # WARNING: HTTPS should be enabled for production deployment
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP": 80}]'
     alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    #alb.ingress.kubernetes.io/security-groups: sg-0a82a4cba71dca0db
+    #alb.ingress.kubernetes.io/manage-backend-security-group-rules: 'true'
   labels: {}
   hosts:
-    - paths:
+    - host: ml.playground.opensearch.org
+      paths:
         - path: /
           backend: {}
 
-      #ingress:
-      #  enabled: true
-      #  ingressClassName: alb
-      #  annotations:
-      #    alb.ingress.kubernetes.io/scheme: internet-facing
-      #    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP": 80}]'
-      #    alb.ingress.kubernetes.io/target-type: ip
-      #    alb.ingress.kubernetes.io/ssl-redirect: '443'
-      #    alb.ingress.kubernetes.io/security-groups: sg-0a82a4cba71dca0db
-      #    alb.ingress.kubernetes.io/manage-backend-security-group-rules: 'true'
-      #  labels: {}
-      #  hosts:
-      #    - host: treadstone.ml.playground.opensearch.org
-      #      paths:
-      #        - path: /
-      #          backend:
-      #            serviceName: "opensearch-dashboards"
-      #            servicePort: 80
-      #
-      #service:
-      #  type: NodePort
+service:
+  type: NodePort
