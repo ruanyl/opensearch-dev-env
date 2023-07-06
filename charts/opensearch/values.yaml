@@ -808,6 +808,9 @@ securityConfig:
             - cluster:admin/opendistro/transform/get_transforms
             # To enable read access ml profile
             - cluster:admin/opensearch/ml/profile/nodes
+            - cluster:admin/opensearch/ml/models/get
+            - cluster:admin/opensearch/ml/models/search
+            - cluster:admin/opensearch/ml/predict
             # To enable read access to various ISM Jobs
             - cluster:admin/opendistro/rollup/explain
             - cluster:admin/opendistro/ism/policy/get
