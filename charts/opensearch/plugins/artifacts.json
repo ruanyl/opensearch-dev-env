@@ -2,7 +2,7 @@
   "plugins": [
     {
       "name": "opensearch-ml",
-      "url": "https://ml-commons.s3.us-west-2.amazonaws.com/treadstone/opensearch-ml-2.7.0.0-SNAPSHOT-update-model.zip?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEBEaCXVzLXdlc3QtMiJHMEUCIGWUEfkdjMWfbrWKLC01BUToBpxqAxI6F3%2B2kEa4m2QGAiEAm9xHTgNSKq%2FIsSB0h86DHPfKiu9FGKLxXfbM%2BllnvdIq6wIIiv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAEGgw4MDEyMjM2MzUxMTkiDFFWMWY53FmMHDxXQiq%2FAka081Qtrd7H4a4Gr2zNRaNrKNhDh6vcJkl3izkS%2BPwLj%2BZnXkraGLW1HadU5veBggDWG5n6iCh%2FUwuQri1PQeV79Q%2BQafbDBXqelJlD9AV8CEP7x7VZiu1suaHS2mNhD5JatssUbiUE0xyDt4yETALGNkK5BL8KzEeBdU74uIU%2Bo8XsCM8BCtI0dYoH0RXYoyTuSkt46Q6nie295ryqwlWuFQDB4c58ccJum5291JhtAqAOBN2LOjU4nVDu4zeDbuXF17p1i4E4Bh3JNOem25wu8OCaRmi46ur1OXVFHCm1RbSQ1GaOcHKienz5dXF7nk33niEKCgd0ZnVBFw%2FDQVMleVVaq4LIdrU8%2F1GYaJdtdusfYjS5GgmGP0gJUnuCo6GvitJmHf6BlZZ1JkTIa%2FyiIQSSajBsyLopKHClJUowvu6ppQY6hwI3ql3b0qHkq9JrK5Do4jnSGDMqadxR%2FOCafkkq0oZMBhjyJhUs6fZzSmVwAk2D4kJeYYPGWuCBqzUY7TfSwLofq0f7OZ8cqerBp%2FNfcwedvuDO6U4rGHPFJPkdlmgqQOo%2FpKRLWaWgoEa%2F2O5c5pGHWcR2P6apPAbBMzeqhZFFyOGY6%2Fmx1pVsR2oJLVBSAVWK6Bo38CNjd3iKUMtWDPPeuZzpBmxSdaTj238HdQJomg%2BZ0fJgX%2Bwc99H9Tg4qI7gTLdO1LNed23GJB6iDrEOG%2BHlnfUEOjyrz61%2BrDms04LbCDwRDNqpnZQLgZ0HC%2FwkZDtSPG2ZsVO3ueUaopmbepV5JUrnQdQ%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20230709T090116Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=ASIA3VDFGOCXQDOT25NX%2F20230709%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Signature=0509a099808e1f8ab139879e2075dc7fd0074dad1e65bc8e4b4ee70818d8c345"
+      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/artifacts-5499009723/opensearch-ml.zip"
     },
     {
       "name": "opensearch-neural-search",
