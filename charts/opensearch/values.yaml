@@ -799,6 +799,7 @@ securityConfig:
           cluster_permissions:
             # For using _cat/indices
             - 'cluster:monitor/state'
+            - 'cluster:monitor/main'
             - 'cluster:monitor/health'
             - 'cluster:monitor/nodes/info'
             # To enable read access to ISM
