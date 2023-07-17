@@ -30,7 +30,7 @@ program
     "--chunk-size <chunkSize>",
     "The text chunk size limit, if exceed limit, text will be split into multiple document.",
     Number,
-    1000
+    0
   )
   .option("--chunk-overlap <chunkOverlap>", "Text chunk overlap", Number, 200)
   .option("-p, --password <password>", "OpenSearch password")
@@ -81,44 +81,43 @@ const q = queue((task, callback) => {
   fetch(endpoint, {
     method: "POST",
     body: task.data,
-    agent: new https.Agent({ rejectUnauthorized: false }),
+    // agent: new https.Agent({ rejectUnauthorized: false }),
     headers,
   })
     .then((res) => {
-      res.json().then((json) => {
-        if (json.error) {
-          console.log("Error: ", JSON.stringify(json.error));
-          // retry task
-          q.push(task);
-        } else if (json.errors) {
-          const failed = [];
-          const succeed = [];
-          // when ingesting with _bulk, we will need to find out the failed documents and recreate the documents
-          json.items.forEach((e) => {
-            if (e.index.error) {
-              failed.push(e.index._id);
-              addToBatch(task.rawData[e.index._id]);
-              console.log("Error: ", JSON.stringify(e.index.error));
-            } else {
-              succeed.push(e.index._id);
-            }
-          });
-          count = count + succeed.length;
-          console.log(
-            `Trying to create ${
-              Object.keys(task.rawData).length
-            } documents: Failed ${failed.length}/Succeed ${
-              succeed.length
-            } (Retrying ${failed})`
-          );
-        } else {
-          count = count + json.items.length;
-        }
-        callback();
-      });
+      return res.json();
     })
-    .then(() => {
+    .then((json) => {
+      if (json.error) {
+        console.log("Error: ", JSON.stringify(json.error));
+        // retry task
+        q.push(task);
+      } else if (json.errors) {
+        const failed = [];
+        const succeed = [];
+        // when ingesting with _bulk, we will need to find out the failed documents and recreate the documents
+        json.items.forEach((e) => {
+          if (e.index.error) {
+            failed.push(e.index._id);
+            addToBatch(task.rawData[e.index._id]);
+            console.log("Error: ", JSON.stringify(e.index.error));
+          } else {
+            succeed.push(e.index._id);
+          }
+        });
+        count = count + succeed.length;
+        console.log(
+          `Trying to create ${
+            Object.keys(task.rawData).length
+          } documents: Failed ${failed.length}/Succeed ${
+            succeed.length
+          } (Retrying ${failed})`
+        );
+      } else {
+        count = count + json.items.length;
+      }
       console.log(`${count} documents created`);
+      callback();
       // RESUME reading file
       if (q.length() < 3) {
         rl.resume();
@@ -160,41 +159,44 @@ function write(json) {
     json.id = nanoid();
   }
 
-  const textField = opts.textField;
-  const chunkSize = opts.chunkSize ? parseInt(opts.chunkSize) : 1000;
-  const chunkOverlap = opts.chunkOverlap ? parseInt(opts.chunkOverlap) : 200;
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: chunkSize,
-    chunkOverlap: chunkOverlap,
-  });
-  const text = json[textField]?.toString();
+  const text = json[opts.textField]?.toString();
 
   if (text) {
-    delete json[textField];
-    // splitter.createDocuments([text]).then((docs) => {
-    // docs.forEach((d, i) => {
+    delete json[opts.textField];
+
+    const results = [];
     let data = { ...json, text: text };
     if (opts.onlyText) {
       data = { text: text, id: json.id };
     }
-    // if (docs.length > 1) {
-    //   data.id = `${data.id}_${i}`;
-    // }
 
-    // request _bulk if batchSize > 1
-    if (opts.batchSize > 1) {
-      addToBatch(data);
-    } else {
-      q.push({
-        data: JSON.stringify(data),
-        bulk: false,
-        documentId: data.id,
+    if (opts.chunkSize > 0) {
+      const splitter = new RecursiveCharacterTextSplitter({
+        chunkSize: opts.chunkSize,
+        chunkOverlap: opts.chunkOverlap,
       });
+      splitter.createDocuments([text]).then((docs) => {
+        docs.forEach((doc) => {
+          results.push({ ...data, text: doc.pageContent });
+        });
+      });
+    } else {
+      results.push(data);
     }
-    //});
-    // });
+
+    for (const d of results) {
+      // request _bulk if batchSize > 1
+      if (opts.batchSize > 1) {
+        addToBatch(d);
+      } else {
+        q.push({
+          data: JSON.stringify(d),
+          bulk: false,
+          documentId: data.id,
+        });
+      }
+    }
   }
-  // TODO: future improvement: supports ingesting raw documents without splitting
 }
 
 const run = () => {
