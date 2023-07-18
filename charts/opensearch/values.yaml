@@ -795,7 +795,7 @@ securityConfig:
 
         # Anonymous access role
         opendistro_security_anonymous_role:
-          reserved: true
+          reserved: false
           cluster_permissions:
             # For using _cat/indices
             - 'cluster:monitor/state'
