@@ -45,10 +45,18 @@ program
     "The number of requests to run in parallel",
     Number,
     1
+  )
+  .option(
+    "--split-doc <splitDoc>",
+    "if exceed chunkSize, split the doc into multiple",
+    Number,
+    1
   );
 
 program.parse();
 const opts = program.opts();
+const succeedDocsWriter = fs.createWriteStream("succeed_docs");
+const failedDocsWriter = fs.createWriteStream("failed_docs");
 
 let count = 0;
 const batch = [];
@@ -81,11 +89,18 @@ const q = queue((task, callback) => {
   fetch(endpoint, {
     method: "POST",
     body: task.data,
-    // agent: new https.Agent({ rejectUnauthorized: false }),
+    agent: new https.Agent({ rejectUnauthorized: false }),
     headers,
   })
     .then((res) => {
       return res.json();
+    })
+    .then((json) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(json);
+        }, 1000);
+      });
     })
     .then((json) => {
       if (json.error) {
@@ -99,7 +114,7 @@ const q = queue((task, callback) => {
         json.items.forEach((e) => {
           if (e.index.error) {
             failed.push(e.index._id);
-            addToBatch(task.rawData[e.index._id]);
+            // addToBatch(task.rawData[e.index._id]);
             console.log("Error: ", JSON.stringify(e.index.error));
           } else {
             succeed.push(e.index._id);
@@ -109,12 +124,19 @@ const q = queue((task, callback) => {
         console.log(
           `Trying to create ${
             Object.keys(task.rawData).length
-          } documents: Failed ${failed.length}/Succeed ${
-            succeed.length
-          } (Retrying ${failed})`
+          } documents: Failed ${failed.length}/Succeed ${succeed.length}`
         );
+        if (succeed.length) {
+          succeedDocsWriter.write(succeed.join(",") + ",");
+        }
+        if (failed.length) {
+          failedDocsWriter.write(failed.join(",") + ",");
+        }
       } else {
         count = count + json.items.length;
+        succeedDocsWriter.write(
+          json.items.map((item) => item.index._id).join(",") + ","
+        );
       }
       console.log(`${count} documents created`);
       callback();
@@ -153,7 +175,7 @@ const rl = readline.createInterface({
   crlfDelay: Infinity,
 });
 
-function write(json) {
+async function write(json) {
   const id = json.id;
   if (id === undefined || id === null || id === "") {
     json.id = nanoid();
@@ -170,16 +192,27 @@ function write(json) {
       data = { text: text, id: json.id };
     }
 
+    console.log("chunk size: ", opts.chunkSize);
     if (opts.chunkSize > 0) {
       const splitter = new RecursiveCharacterTextSplitter({
         chunkSize: opts.chunkSize,
         chunkOverlap: opts.chunkOverlap,
       });
-      splitter.createDocuments([text]).then((docs) => {
-        docs.forEach((doc) => {
-          results.push({ ...data, text: doc.pageContent });
+      const docs = await splitter.createDocuments([text]);
+      if (opts.splitDoc > 1) {
+        docs.forEach((doc, i) => {
+          results.push({
+            ...data,
+            text: doc.pageContent,
+            id: `${data.id}_${i}`,
+          });
         });
-      });
+      } else {
+        results.push({
+          ...data,
+          text: docs[0].pageContent,
+        });
+      }
     } else {
       results.push(data);
     }
@@ -206,6 +239,7 @@ const run = () => {
     const json = JSON.parse(line);
     write(json);
 
+    console.log("Queue size: ", q.length());
     if (q.length() > 10) {
       rl.pause();
     }
