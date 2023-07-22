@@ -124,6 +124,7 @@ config:
     # Content security policy(csp) settings
     csp.rules: [ "connect-src 'self' www.google-analytics.com vectors.maps.opensearch.org tiles.maps.opensearch.org maps.opensearch.org;" ]
     csp.warnLegacyBrowsers: false
+    google_analytics_plugin.trackingID: <secret:/app/data/opensearch/google_analytics_plugin~trackingID>
 
 opensearchDashboardsYml:
   defaultMode:
@@ -256,6 +257,6 @@ lifecycle: {}
 
 ## Enable to add 3rd Party / Custom plugins not offered in the default OpenSearchDashboards image.
 plugins:
-  enabled: false
-  installList: []
+  enabled: true
+  installList: ["https://github.com/BionIT/google-analytics-plugin/releases/download/2.7.0/googleAnalytics-2.7.0.zip"]
   # - example-fake-plugin-downloadable-url
