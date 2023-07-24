@@ -10,7 +10,7 @@ majorVersion: "2"
 
 opensearchJavaOpts: "-Xmx16G -Xms16G"
 
-replicas: 4
+replicas: 6
 
 resources:
   requests:
