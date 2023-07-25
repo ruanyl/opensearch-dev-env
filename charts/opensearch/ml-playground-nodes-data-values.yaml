@@ -23,3 +23,6 @@ roles:
   - ingest
   - data
   - remote_cluster_client
+
+persistence:
+  size: 480Gi
