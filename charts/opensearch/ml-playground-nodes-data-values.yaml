@@ -1,0 +1,25 @@
+global:
+  dockerRegistry: public.ecr.aws
+
+image:
+  repository: "m4z9c2w0/opensearch-treadstone"
+  tag: "4816141528"
+  pullPolicy: "IfNotPresent"
+
+majorVersion: "2"
+
+opensearchJavaOpts: "-Xmx24G -Xms24G"
+
+replicas: 4
+
+resources:
+  requests:
+    cpu: "4"
+    memory: "48Gi"
+
+nodeGroup: "data"
+
+roles:
+  - ingest
+  - data
+  - remote_cluster_client
