@@ -23,12 +23,10 @@ ingress:
     alb.ingress.kubernetes.io/manage-backend-security-group-rules: 'true'
   labels: {}
   hosts:
-    - host: treadstone.ml.playground.opensearch.org
+    - host: test.ml.playground.opensearch.org
       paths:
         - path: /
-          backend:
-            serviceName: "opensearch-dashboards"
-            servicePort: 80
+          backend: {}
 
 service:
   type: NodePort
