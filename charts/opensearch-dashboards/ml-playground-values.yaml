@@ -1,6 +1,6 @@
 image:
-  repository: "opensearchplayground/opensearch-dashboards"
-  tag: "2.7.0-fix"
+  repository: "opensearchproject/opensearch-dashboards"
+  tag: "2.9.0"
   pullPolicy: "IfNotPresent"
 
 replicaCount: 1

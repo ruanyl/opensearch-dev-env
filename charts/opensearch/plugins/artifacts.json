@@ -1,12 +1,3 @@
 {
-  "plugins": [
-    {
-      "name": "opensearch-ml",
-      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/artifacts-5585665437/opensearch-ml.zip"
-    },
-    {
-      "name": "opensearch-neural-search",
-      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/artifacts-5339916495/opensearch-neural-search.zip"
-    }
-  ]
+  "plugins": []
 }
