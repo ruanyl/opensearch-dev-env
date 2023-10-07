@@ -2,7 +2,7 @@
   "plugins": [
     {
       "name": "opensearch-ml",
-      "url": "https://ml-commons.s3.us-west-2.amazonaws.com/opensearch-ml-2.9.0.0-SNAPSHOT.zip?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIQDEfE2GbNAUPtlg5PydlecZZbxuNhY%2BzE%2Bm%2FPmIXc73ywIfGES61DXM%2B3jvJbPwWvPa8Qu6TYuoHX30k0SDiOpFfirrAgiJ%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAQaDDgwMTIyMzYzNTExOSIMOKXQv9qHhSgPRhTaKr8Caibqer7t0YQJBmgM8dg9ZeYAVmOQ7sjxQ0NRx9K11UD6yCDUOJm8fjB%2Fk0NbeyxEkHmLd%2FNsHeocFWOeLgy1DoMpZ25iWlO%2F%2FnoFLzkel9z49aRdzP3lfUOnerVERWshUheBj16XWHqgRVEUZxq9byWm0TCU9Yi1rZ5T2YNNTSxWfLQRvEZ9xPEOFu90EL72Ffd%2F%2FTKvLdV6nGEdBaZYHGXAV5w73cV8Q0U5B4HWLeSDWnHNXBIHonFdOxwCYRj2hsvod6K1D0IrM1AbSvAy7GtG9W%2BlxdEbUseFyhhQzaemsfLrL10RhehmBrOye6uHL3y8EgdzYmr%2Ft2ajmaK933rw5IKoM1LkFj%2FlzlBaFwWh3cEoHnPtrtVvWUv%2Fl8kblf5PpQ51DwrrG7t9GOpuon7U3eRHL84maDvEW1qitTD9qYSpBjqIAkIT7xlueJBcNejEOVFP5%2B0XnC%2FVEJzAt5lZQTMhEd%2FptkantqgeIpw9sikf%2Bs1HvoAbudIDonq9OW9rZq1vhS5amWIBt1losc%2FmuFju03pNLa2g5I0%2FyA1Kby1yidy%2FZ%2B3HLhgjGTBmelNSwTap359CFId7HD2zWrG%2BMH%2BUajhGOhgTJFAnwTkjDuXJxn%2F0l5N2Z%2FCzLiuft9p3UMHWa8iYMiIUTaW%2FcRXjT9S3Zs1CknxghV9j%2FrKgiTUP0nllnColgS9aQnrOVv%2FL%2Blh0rkYIVHPKGJnjyVqUNWWRitH%2FP0nFxdIvFj%2Bmh6wtQWlxULPdTvgaT7ul0ASVNUn7TEJPasCybZw%2B%2BA%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20231007T082147Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=ASIA3VDFGOCX2W5E5UYT%2F20231007%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Signature=ee3a6e7bd54366da239f4ad778f247475f9a403e43d399cbd6eacdb826bfd898"
+      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/ml-commons-2.9.0-fix/opensearch-ml-2.9.0.0-SNAPSHOT.zip"
     }
   ]
 }
