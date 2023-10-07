@@ -1,12 +1,8 @@
 {
   "plugins": [
     {
-      "name": "mlCommonsDashboards",
-      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/artifacts.4770138978/mlCommonsDashboards.zip"
-    },
-    {
       "name": "searchRelevanceDashboards",
-      "url": "https://github.com/sejli/dashboards-search-relevance/releases/download/2.7.0-experimental.5662283360/searchRelevanceDashboards-2.7.0.zip"
+      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/searchRelevanceDashboards-2.9.0/searchRelevanceDashboards-2.9.0.zip"
     }
   ]
 }
