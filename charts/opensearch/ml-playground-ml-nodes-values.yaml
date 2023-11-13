@@ -1,7 +1,7 @@
 ---
 image:
   repository: "opensearchproject/opensearch"
-  tag: "2.9.0"
+  tag: "2.11.0"
   pullPolicy: "IfNotPresent"
 
 majorVersion: "2"

@@ -2,7 +2,7 @@
   "plugins": [
     {
       "name": "opensearch-ml",
-      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/ml-commons-2.9.0-fix/opensearch-ml-2.9.0.0-SNAPSHOT.zip"
+      "url": "https://github.com/ruanyl/opensearch-dev-env/releases/download/opensearch-2.11.0/opensearch-ml-2.11.0.0-SNAPSHOT.zip"
     }
   ]
 }
