@@ -70,7 +70,7 @@ config:
             pemcert_filepath: esnode.pem
             pemkey_filepath: esnode-key.pem
             pemtrustedcas_filepath: root-ca.pem
-        allow_unsafe_democertificates: true
+        allow_unsafe_democertificates: false
         allow_default_init_securityindex: true
         authcz:
           admin_dn:
