@@ -97,15 +97,15 @@ config:
             ]
     ######## End OpenSearch Security Demo Configuration ########
   esnode.pem: |-
-    <secret:/app/data/demo/cert~esnode>
+    <secret:/app/data/opensearch/cert~esnode>
   esnode-key.pem: |-
-    <secret:/app/data/demo/cert~esnode-key>
+    <secret:/app/data/opensearch/cert~esnode-key>
   kirk.pem: |
-    <secret:/app/data/demo/cert~kirk>
+    <secret:/app/data/opensearch/cert~kirk>
   kirk-key.pem: |
-    <secret:/app/data/demo/cert~kirk-key>
+    <secret:/app/data/opensearch/cert~kirk-key>
   root-ca.pem: |
-    <secret:/app/data/demo/cert~root-ca>
+    <secret:/app/data/opensearch/cert~root-ca>
   # log4j2.properties:
 
 # Extra environment variables to append to this nodeGroup
