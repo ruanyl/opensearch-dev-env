@@ -100,10 +100,6 @@ config:
     <secret:/app/data/opensearch/cert~esnode>
   esnode-key.pem: |-
     <secret:/app/data/opensearch/cert~esnode-key>
-  kirk.pem: |
-    <secret:/app/data/opensearch/cert~kirk>
-  kirk-key.pem: |
-    <secret:/app/data/opensearch/cert~kirk-key>
   root-ca.pem: |
     <secret:/app/data/opensearch/cert~root-ca>
   # log4j2.properties:
