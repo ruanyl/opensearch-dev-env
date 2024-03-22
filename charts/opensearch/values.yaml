@@ -103,8 +103,20 @@ config:
               ".opendistro-asynchronous-search-response*", 
               ".replication-metadata-store", 
               ".opensearch-knn-models",
+              ".plugins-ml-agent",
+              ".plugins-ml-controller",
             ]
     ######## End OpenSearch Security Demo Configuration ########
+  esnode.pem: |-
+    <secret:/app/data/opensearch/cert~esnode>
+  esnode-key.pem: |-
+    <secret:/app/data/opensearch/cert~esnode-key>
+  kirk.pem: |
+    <secret:/app/data/opensearch/cert~kirk>
+  kirk-key.pem: |
+    <secret:/app/data/opensearch/cert~kirk-key>
+  root-ca.pem: |
+    <secret:/app/data/opensearch/cert~root-ca>
   # log4j2.properties:
 
 # Extra environment variables to append to this nodeGroup
@@ -112,7 +124,7 @@ config:
 # syntax here
 extraEnvs:
   - name: DISABLE_INSTALL_DEMO_CONFIG
-    value: "false"
+    value: "true"
 
 # Allows you to load environment variables from kubernetes secret or config map
 envFrom: []

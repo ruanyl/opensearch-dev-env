@@ -258,5 +258,5 @@ lifecycle: {}
 ## Enable to add 3rd Party / Custom plugins not offered in the default OpenSearchDashboards image.
 plugins:
   enabled: true
-  installList: ["https://github.com/BionIT/google-analytics-plugin/releases/download/2.11.0/googleAnalytics-2.11.0.zip"]
+  installList: ["https://github.com/BionIT/google-analytics-plugin/releases/download/2.12.0/googleAnalytics-2.12.0.zip"]
   # - example-fake-plugin-downloadable-url
