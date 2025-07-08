@@ -139,7 +139,8 @@ image:
   tag: ""
   pullPolicy: "IfNotPresent"
 
-podAnnotations: {}
+podAnnotations:
+  {}
   # iam.amazonaws.com/role: es-cluster
 
 # additionals labels
@@ -218,21 +219,31 @@ persistence:
   size: 120Gi
   annotations: {}
 
-extraVolumes: []
+extraVolumes:
+  []
+  #- name: s3-credentials
+  #  secret:
+  #    secretName: s3-credentials
   # - name: extras
   #   emptyDir: {}
 
-extraVolumeMounts: []
+extraVolumeMounts:
+  []
+  # - name: s3-credentials
+  #   mountPath: /mnt/s3-credentials
+  #   readOnly: true
   # - name: extras
   #   mountPath: /usr/share/extras
   #   readOnly: true
 
-extraContainers: []
+extraContainers:
+  []
   # - name: do-something
   #   image: busybox
   #   command: ['do', 'something']
 
-extraInitContainers: []
+extraInitContainers:
+  []
   # - name: do-somethings
   #   image: busybox
   #   command: ['do', 'something']
@@ -272,7 +283,6 @@ transportPort: 9300
 metricsPort: 9600
 httpHostPort: ""
 transportHostPort: ""
-
 
 service:
   labels: {}
@@ -1089,11 +1099,12 @@ startupProbe:
   timeoutSeconds: 3
   failureThreshold: 30
 
-livenessProbe: {}
+livenessProbe:
+  {}
   # periodSeconds: 20
   # timeoutSeconds: 5
   # failureThreshold: 10
-   # successThreshold: 1
+  # successThreshold: 1
   # initialDelaySeconds: 10
   # tcpSocket:
   #   port: 9200
@@ -1122,7 +1133,8 @@ ingress:
   # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
   # ingressClassName: nginx
 
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
@@ -1138,7 +1150,8 @@ fullnameOverride: ""
 
 masterTerminationFix: false
 
-opensearchLifecycle: {}
+opensearchLifecycle:
+  {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the preStart handler > /usr/share/message"]
@@ -1146,7 +1159,8 @@ opensearchLifecycle: {}
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
 
-lifecycle: {}
+lifecycle:
+  {}
   # preStop:
   #   exec:
   #     command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
@@ -1166,7 +1180,8 @@ lifecycle: {}
   #         while [[ "$(curl -s -o /dev/null -w '%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
   #         curl -XPUT "$ES_URL/_template/$TEMPLATE_NAME" -H 'Content-Type: application/json' -d'{"index_patterns":['\""$INDEX_PATTERN"\"'],"settings":{"number_of_shards":'$SHARD_COUNT',"number_of_replicas":'$REPLICA_COUNT'}}'
 
-keystore: []
+keystore:
+  - secretName: s3-credentials
 # To add secrets to the keystore:
 #  - secretName: opensearch-encryption-key
 
@@ -1211,7 +1226,8 @@ sampleData:
   enabled: false
 
 # -- Array of extra K8s manifests to deploy
-extraObjects: []
+extraObjects:
+  []
   # - apiVersion: secrets-store.csi.x-k8s.io/v1
   #   kind: SecretProviderClass
   #   metadata:
